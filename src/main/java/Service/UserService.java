@@ -19,7 +19,7 @@ public class UserService {
      * @return
      */
     public Account addUser(Account account){
-        if(account.getUsername().length() > 0 && account.getPassword().length() > 4){
+        if(account.getUsername().length() > 0 && account.getPassword().length() > 4 ){
             return userDAO.createUser(account);
         }else{
             return null;

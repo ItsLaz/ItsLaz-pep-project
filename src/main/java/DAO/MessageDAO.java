@@ -24,8 +24,19 @@ public class MessageDAO {
             ps.setInt(1, msg.getPosted_by());
             ps.setString(2, msg.getMessage_text());
             ps.setLong(3, msg.getTime_posted_epoch());
-            ps.executeUpdate();
-            return msg;
+            int rowsAffected = ps.executeUpdate();
+            if(rowsAffected > 0){
+                String sql2 = "SELECT * FROM Message WHERE time_posted_epoch = ?";
+                PreparedStatement ps2 = c.prepareStatement(sql2);
+                ps2.setLong(1, msg.getTime_posted_epoch());
+                ResultSet rs = ps2.executeQuery();
+                while(rs.next()){
+                    Message m = new Message(rs.getInt("message_id"),rs.getInt("posted_by"),rs.getString("message_text"),rs.getLong("time_posted_epoch"));
+                    return m;
+                }
+
+            }
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -154,7 +165,7 @@ public class MessageDAO {
         List<Message> msgs = new ArrayList<>();
 
         try {
-            String sql = "SELECT * FROM Message WHERE posted_by=?';";
+            String sql = "SELECT * FROM Message WHERE posted_by=?;";
             PreparedStatement ps = c.prepareStatement(sql);
             ps.setInt(1, id);
             

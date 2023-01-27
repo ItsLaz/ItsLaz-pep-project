@@ -2,6 +2,7 @@ package DAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import Model.Account;
@@ -25,8 +26,19 @@ public class UserDAO {
             ps.setString(1, account.getUsername());
             ps.setString(2, account.getPassword());
 
-            ps.executeUpdate();
-            return account;
+            int rowsAffected = ps.executeUpdate();
+            if(rowsAffected > 0){
+                String sql2 = "SELECT * FROM Account WHERE username = ?";
+                PreparedStatement ps2 = c.prepareStatement(sql2);
+                ps2.setString(1, account.getUsername());
+                ResultSet rs = ps2.executeQuery();
+                while(rs.next()){
+                    Account ac = new Account(rs.getInt("account_id"),
+                            rs.getString("username"),
+                            rs.getString("password"));
+                    return ac;
+                }
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -44,8 +56,13 @@ public class UserDAO {
             PreparedStatement ps = c.prepareStatement(sql);
             ps.setString(1, account.getUsername());
             ps.setString(2, account.getPassword());
-            ps.executeUpdate();
-            return new Account(account.getUsername(), account.getPassword());
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                Account ac = new Account(rs.getInt("account_id"),
+                            rs.getString("username"),
+                            rs.getString("password"));
+                return ac;
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

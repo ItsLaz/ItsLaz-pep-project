@@ -52,7 +52,9 @@ public class MessageService {
      */
     public Message deleteMsgById(int id){
         if(msgDAO.getMsgById(id) != null){
-            return msgDAO.deleteMsgById(id);
+            Message msg = msgDAO.getMsgById(id);
+            msgDAO.deleteMsgById(id);
+            return msg;
         }else{
             return null;
         }
@@ -65,7 +67,7 @@ public class MessageService {
      * @return
      */
     public Message updateMsgById(int id, String newText){
-        if(msgDAO.getMsgById(id) != null && newText.length() > 0 && newText.length() <255){
+        if(msgDAO.getMsgById(id) != null && newText.length() > 0 && newText.length() < 255){
             return msgDAO.updateMsg(id, newText);
         }else{
             return null;
