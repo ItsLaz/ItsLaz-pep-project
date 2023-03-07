@@ -7,8 +7,10 @@ pipeline {
       steps {
         echo 'Building the jar file'
         
-        
         sh 'mvn -version'
+        
+        // builds and creates jar file
+        sh 'mvn clean package'
       }
     }
   }
